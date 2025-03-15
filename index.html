@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPO Dashboard</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            margin-right: 10px;
+        }
+        .section {
+            background: #00b2b2;
+            padding: 10px;
+            text-align: center;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 10px;
+            border: 1px solid #00b2b2;
+        }
+        .btn {
+            background: #00b2b2;
+            color: #000;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .center-align {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .content-box {
+            max-width: 800px;
+        }
+        .popup, .otp-form, .success-message, .registration-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111;
+            padding: 20px;
+            border: 2px solid #00b2b2;
+            z-index: 10;
+            text-align: center;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 5;
+        }
+        .otp-form input, .otp-form select, .registration-form input, .registration-form select {
+            margin: 10px 0;
+            padding: 5px;
+            width: 100%;
+        }
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://ipo.meon.co.in/static/sureshrathi/images/logo.png" alt="Suresh Rathi" height="30">
+        <h2>IPOs</h2>
+    </div>
+
+    <div class="section">
+        <h3>Current Issues</h3>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Symbol</th>
+            <th>Category</th>
+            <th>Type of Issue</th>
+            <th>Exchange</th>
+            <th>Offer Start Date</th>
+            <th>Offer End Date</th>
+            <th>Price Range</th>
+            <th>Minimum Order</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>SUPER IRON FOUNDRY LIMITED</td>
+            <td>SUPERIRON</td>
+            <td>
+                <select>
+                    <option>IND</option>
+                </select>
+            </td>
+            <td>BSE (SME)</td>
+            <td>BSE</td>
+            <td>11-03-2025 10:00:00</td>
+            <td>13-03-2025 17:00:00</td>
+            <td>108.00 - 108.00</td>
+            <td>1200</td>
+            <td><button class="btn" onclick="showPopup()">APPLY IPO</button></td>
+        </tr>
+        <tr>
+            <td>Divine Hira Jewellers Limited</td>
+            <td>DIVINEHIRA</td>
+            <td>
+                <select>
+                    <option>RETAIL</option>
+                </select>
+            </td>
+            <td>IPO (SME)</td>
+            <td>NSE</td>
+            <td>17-03-2025</td>
+            <td>19-03-2025</td>
+            <td>90 - 90</td>
+            <td>1600</td>
+            <td><button class="btn" onclick="showPopup()">PRE APPLY</button></td>
+        </tr>
+    </table>
+
+    <div style="text-align: right; margin-top: 20px;">
+        <button class="btn" onclick="showPopup()">Modify previous bids</button>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup" style="border-radius: 8px;">
+        <span class="close-icon" onclick="closePopup()">×</span>
+        <p>Do you have a Demat / Trading Account with <b>SURESH RATHI SECURITIES (P) LTD.</b> (DIRECTOR: SURESH RATHI)?</p>
+        <button class="btn" onclick="showOtpForm()">YES</button>
+        <button class="btn" onclick="showRegistrationForm()">NO</button>
+    </div>
+
+    <div class="otp-form" id="otpForm" style="border-radius: 10px;">
+        <span class="close-icon" onclick="closeOtpForm()">×</span>
+        <h3>Client Login / Registered Mobile Number</h3>
+        <input style="width: 500px;" type="text"  maxlength="10" placeholder="Enter Mobile Number" required><br>
+        <select id="dematAccount">
+            <option value="">Select Demat Account</option>
+            <option value="123456789012">123456789012</option>
+            <option value="987654321098">987654321098</option>
+        </select><br>
+        <input style="width: 500px;" type="text" id="otpInput" placeholder="OTP" required><br>
+        <p style="color: red;">* OTP sent on your mobile number registered with us</p>
+        <button class="btn" onclick="verifyOtp()">VERIFY OTP</button>
+        <button class="btn" onclick="closeOtpForm()">CANCEL</button>
+        <div class="timer" style="margin-top: 10px;">01:03</div>
+    </div>
+
+    <div class="registration-form" id="registrationForm" style="border-radius: 10px; width: 488px;">
+        <span class="close-icon" onclick="closeRegistrationForm()">×</span>
+        <h3>New Registration</h3>
+        <input type="text" placeholder="Name" required><br>
+        <input type="email" placeholder="Email" required><br>
+        <input type="text" placeholder="Mobile Number" required><br>
+        <input type="text" placeholder="OTP" required><br>
+        <select style="width: 500px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" class="mb-2">   
+            <option value="">Depository Participant Name</option>
+            <option value="CDSL">CDSL</option>
+            <option value="NSDL">NSDL</option>
+        </select><br>
+        <input type="text" placeholder="PAN CARD NO." required><br>
+        <button class="btn" onclick="submitRegistration()">SIGN UP</button>
+        <button class="btn" onclick="closeRegistrationForm()">CANCEL</button>
+    </div>
+
+    <div class="success-message" id="successMessage" style="border-radius: 8px;">
+        <h3>Login Successful!</h3>
+        <p>You will be redirected to the IPO page shortly.</p>
+    </div>
+
+    <div class="center-align">
+        <div class="content-box">
+            <p style="margin-left: 120px;">
+                <b>RETAIL:</b> Retail Individual Investors (RIIs).<br>
+                <b>NIB:</b> Non-Institutional Bidders (NIBs) or Non-Institutional Investors (NIIs).<br>
+                <b>EMPRET:</b> Employee Reserved Quota (EMP).<br>
+                <a href="https://www.npci.org.in/what-we-do/ipo/live-partners" target="_blank">Click here</a> to check the list of apps and banks which support UPI IPO currently.
+            </p>
+            <p style="margin-left: 20px;">IPO bidding window is open from 10:00 AM till 05:00 PM | Only UPI Payments are supported for IPOs</p>
+        </div>
+    </div>
+
+    <script>
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function showOtpForm() {
+            closePopup();
+            document.getElementById('otpForm').style.display = 'block';
+        }
+
+        function closeOtpForm() {
+            document.getElementById('otpForm').style.display = 'none';
+        }
+
+        function showRegistrationForm() {
+            closePopup();
+            document.getElementById('registrationForm').style.display = 'block';
+        }
+
+        function closeRegistrationForm() {
+            document.getElementById('registrationForm').style.display = 'none';
+        }
+
+        function submitRegistration() {
+            const inputs = document.querySelectorAll('.registration-form input');
+            const select = document.querySelector('.registration-form select');
+
+            for (let input of inputs) {
+                if (!input.value.trim()) {
+                    alert("Please fill all the fields");
+                    return;
+                }
+            }
+
+            if (!select.value) {
+                alert("Please select a Depository Participant Name");
+                return;
+            }
+            // If all fields are filled
+            alert("Registration submitted successfully!");
+            closeRegistrationForm();
+
+            // Redirect to ipo.html after 1 seconds
+            setTimeout(() => {
+                window.location.href = "ipo.html";
+            }, 1000);
+        }
+
+        function verifyOtp() {
+            const otp = document.getElementById('otpInput').value;
+            const dematAccount = document.getElementById('dematAccount').value;
+
+            // Validate OTP and Demat Account
+            if (!dematAccount) {
+                alert("Please select a Demat Account.");
+                return;
+            }
+            if (otp === "1234") { // Example OTP for demonstration
+                document.getElementById('otpForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = "ipo.html";
+                }, 2000); // Redirect after 2 seconds
+            } else {
+                alert("Invalid OTP. Please try again.");
+            }
+        }
+
+        document.querySelector('.header').addEventListener('click', function() { 
+            localStorage.removeItem('userToken');
+            sessionStorage.removeItem('userSession');
+
+            // Redirect to the index page
+            window.location.href = "index.html";
+        });
+
+        function startTimer(duration, display) {
+        let timer = duration, minutes, seconds;
+        setInterval(function () {
+          minutes = Math.floor(timer / 60);
+          seconds = timer % 60;
+    
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+    
+          display.textContent = minutes + ":" + seconds;
+    
+          if (--timer < 0) {
+            timer = 0; // Stop at 0 (or reset if you want)
+          }
+        }, 1000);
+      }
+    
+      window.onload = function () {
+        const display = document.querySelector('.timer');
+        const duration = 63; // Starting time in seconds (01:03)
+        startTimer(duration, display);
+      };
+      document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+        closeRegistrationForm();
+    }})
+    </script>  
+</body>
+</html>

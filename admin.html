@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <div style="margin-bottom: 20px;">
+            <label for="bid-file">Upload Bids:</label>
+            <input type="file" id="bid-file" accept=".csv, .xlsx">
+            <button style="background-color: #00b2b2; width: 70px; height: 30px; border-radius: 15px;" onclick="uploadBids()">Upload</button>
+        </div>
+        
+        <div class="toolbar">
+            <button class="btn">Non-Client</button>
+            <button class="btn">Client</button>
+            <button class="btn">Client Master</button>
+            <button class="btn">NSE Admin</button>
+            <button class="btn">Series</button>
+            <button class="btn">Buyback Admin</button>
+            <button class="btn">Offline Bid</button>
+        </div>
+        <table class="data-table" id="data-table">
+            <thead>
+                <tr>
+                    <th>Bid ID</th>
+                    <th style="width: 110px;">Date</th>
+                    <th>Scpid</th>
+                    <th>Application No</th>
+                    <th>Client Code/Phone</th>
+                    <th>Rate</th>
+                    <th>Quantity</th>
+                    <th>Applicant Name</th>
+                    <th>Pancard</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+
+        <div style="text-align: right; margin-top: 10px;" class="pagination" id="pagination"></div>
+    </div>
+
+    <footer>
+        <p>
+            IPO bidding window is open from 10:00 AM till 05:00 PM | IPO Bidding accepts only UPI Payments | Please use your UPI details for placing IPO bids
+        </p>
+    </footer>
+
+    <script>
+        const data = Array.from({ length: 50 }).map((_, i) => ({
+            bidId: 7268194 + i,
+            date: `2021-02-${(i % 28) + 1}`,
+            scpid: ["NURECA", "MTAR", "EASEMYTRIP", "CRAFTSMAN"][i % 4],
+            applicationNo: 9500993 + i,
+            clientCode: 888231368 + i,
+            rate: (Math.random() * 1000).toFixed(2),
+            quantity: Math.floor(Math.random() * 100) + 1,
+            applicantName: ["Ashutosh", "Sachin A", "Rahul Ranade"][i % 3],
+            pancard: "BRKVP6941F",
+        }));
+
+        const rowsPerPage = 10;
+        let currentPage = 1;
+
+        function renderTable(page) {
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = data.slice(start, end).map(row => `
+                <tr>
+                    <td>${row.bidId}</td>
+                    <td>${row.date}</td>
+                    <td>${row.scpid}</td>
+                    <td>${row.applicationNo}</td>
+                    <td>${row.clientCode}</td>
+                    <td>${row.rate}</td>
+                    <td>${row.quantity}</td>
+                    <td>${row.applicantName}</td>
+                    <td>${row.pancard}</td>
+                    <td>
+                        <button class="btn modify">Modify</button>
+                        <button class="btn delete">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(data.length / rowsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = Array.from({ length: totalPages }, (_, i) => `
+                <button class="btn" onclick="goToPage(${i + 1})">${i + 1}</button>
+            `).join('');
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable(currentPage);
+        }
+
+        document.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete')) {
+                event.target.closest('tr').remove();
+            }
+        });
+
+        renderTable(currentPage);
+        renderPagination();
+
+        function logout() {
+            alert("Logging out...");
+            window.location.href = "admin_login.html";
+        }
+
+        function uploadBids() {
+            const fileInput = document.getElementById('bid-file');
+            if (fileInput.files.length > 0) {
+                alert(`File "${fileInput.files[0].name}" uploaded successfully.`);
+            } else {
+                alert('Please select a file to upload.');
+            }
+        }
+
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00b2b2;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #00b2b2;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: #00b2b2;
+            color: #000;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 178, 178, 0.5);
+        }
+        .upload-bids {
+            margin: 20px auto;
+            padding: 15px;
+            border: 2px solid #00b2b2;
+            border-radius: 5px;
+            background: #111;
+            text-align: center;
+            width: 300px;
+        }
+
+        .upload-bids input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #00b2b2;
+            background: #000;
+            color: #fff;
+        }
+
+        .upload-bids button {
+            margin-top: 10px;
+            padding: 15px 30px; /* Increased button size */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #00b2b2;
+            color: #000;
+            font-size: 1.2em; /* Increased font size */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .upload-bids button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 178, 178, 0.5);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #111;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #00b2b2;
+        }
+
+        .data-table th {
+            background: #00b2b2;
+            color: #000;
+        }
+
+        .data-table tr:hover {
+            background: #00b2b230;
+        }
+
+        .popup, .otp-form, .success-message, .registration-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #111;
+            padding: 20px;
+            border: 2px solid #00b2b2;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 5;
+        }
+
+        .otp-form input, .otp-form select, .registration-form input, .registration-form select {
+            margin: 10px 0;
+            padding: 5px;
+            width: 100%;
+            border: 1px solid #00b2b2;
+            background: #000;
+            color: #fff;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #00b2b2;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px;
+            background: #00b2b2;
+            color: #000;
+            border-radius: 5px;
+        }
+
+        footer p {
+            font-size: 0.9em;
+        }
+        .logout-btn {
+            position: absolute;
+            top: 10px;
+            right: 90px;
+            top: 60px;
+            padding: 10px 20px;
+            background: #ff4c4c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 76, 76, 0.5);
+        }
+    </style>
+</body>
+</html>

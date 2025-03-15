@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPO Dashboard</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #00b2b2;
+            padding: 10px;
+        }
+        .logo {
+            font-weight: bold;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            margin-right: 10px;
+        }
+        .section, h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #00b2b2;
+        }
+        button {
+            background: #00b2b2;
+            color: #000;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .center-align {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .content-box {
+            max-width: 800px;
+        }
+        /* Dark Neon Theme Status Container Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: #0d0d0d;
+            padding: 20px;
+            border: 2px solid #00bcd4;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+            color: #e0f7fa;
+            font-family: Arial, sans-serif;
+        }
+        .status-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .status-header {
+            text-align: center;
+            color: #00bcd4;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            padding: 15px;
+            border: 1px solid #00bcd4;
+            border-radius: 5px;
+            background: #121212;
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+        }
+        .status-item strong {
+            color: #00bcd4;
+            font-weight: bold;
+        }
+        .close {
+            color: #00bcd4;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close:hover {
+            color: #f9f9f9;
+        }
+        .edit-form, .delete-confirmation {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .edit-form input, .edit-form select {
+            padding: 8px;
+            border: 1px solid #00bcd4;
+            border-radius: 5px;
+            background: #121212;
+            color: #e0f7fa;
+        }
+        .edit-form button, .delete-confirmation button {
+            background: #00bcd4;
+            color: #000;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-confirmation button.delete-confirm {
+            background: #f90000;
+        }
+        /* IPO Application Form Styles */
+        .ipo-form-container {
+            display: flex;
+            gap: 15px;
+            overflow-y: auto;
+        }
+        .ipo-form-section {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+        }
+        .ipo-form-section h2, .ipo-form-section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+        }
+        .input-group input, .input-group select, .input-group button {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #2a2a2a;
+            color: #fff;
+        }
+        .btn-submit {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        .important {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+    <style>
+    /* Other styles remain the same */
+
+    /* IPO Application Form Modal Styles */
+    #ipoFormModal .modal-content {
+        max-width: 600px; /* Reduced from 800px */
+        width: 90%;
+        padding: 15px; /* Reduced padding */
+    }
+
+    .ipo-form-container {
+        gap: 10px; /* Reduced gap between sections */
+    }
+
+    .ipo-form-section {
+        padding: 8px; /* Reduced padding */
+    }
+
+    .ipo-form-section h2, .ipo-form-section h3 {
+        font-size: 18px; /* Reduced font size for headings */
+        padding-bottom: 8px; /* Reduced padding */
+    }
+
+    .input-group {
+        margin-bottom: 1px; /* Reduced margin */
+    }
+
+    .input-group label {
+        font-size: 12px; /* Reduced font size for labels */
+        margin-bottom: 4px; /* Reduced margin */
+    }
+
+    .input-group input, .input-group select, .input-group button {
+        padding: 5px; /* Reduced padding */
+        font-size: 12px; /* Reduced font size */
+    }
+
+    .btn-submit {
+        padding: 6px; /* Reduced padding */
+        font-size: 12px; /* Reduced font size */
+    }
+
+    .important {
+        font-size: 12px; /* Reduced font size */
+        margin-bottom: 3px; /* Reduced margin */
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://ipo.meon.co.in/static/sureshrathi/images/logo.png" alt="Suresh Rathi" height="30">
+        <h2>IPOs</h2>
+    </div>
+    <header>
+        <div class="logo">Suresh Rathi</div>
+        <div class="user-info">
+            <span>Welcome, <b>9319170619</b></span>
+            <button class="logout">LOGOUT</button>
+        </div>
+    </header>
+    
+    <section class="current-issues">
+        <h2>Current Issues</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>Category</th>
+                <th>Type of Issue</th>
+                <th>Exchange</th>
+                <th>Offer Start Date</th>
+                <th>Offer End Date</th>
+                <th>Price Range</th>
+                <th>Minimum Order</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>SUPER IRON FOUNDRY LIMITED</td>
+                <td>SUPERIRON</td>
+                <td><select><option>IND</option></select></td>
+                <td>BSE (SME)</td>
+                <td>BSE</td>
+                <td>11-03-2025 10:00:00</td>
+                <td>13-03-2025 17:00:00</td>
+                <td>108.00 - 108.00</td>
+                <td>1200</td>
+                <td><button onclick="openIpoFormModal()">APPLY IPO</button></td>
+            </tr>
+            <tr>
+                <td>Divine Hira Jewellers Limited</td>
+                <td>DIVINEHIRA</td>
+                <td><select><option>RETAIL</option></select></td>
+                <td>IPO(SME)</td>
+                <td>NSE</td>
+                <td>17-03-2025</td>
+                <td>19-03-2025</td>
+                <td>90-90</td>
+                <td>1600</td>
+                <td><button onclick="openIpoFormModal()">PRE APPLY</button></td>
+            </tr>
+        </table>
+    </section>
+
+    <section class="my-bids">
+        <h2>My Bids</h2>
+        <table>
+            <tr>
+                <th>Symbol</th>
+                <th>Category</th>
+                <th>Bid ID</th>
+                <th>Application Number</th>
+                <th>Dp ID</th>
+                <th>PAN</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>UPI</th>
+                <th>Date/Time</th>
+                <th>View Status</th>
+                <th>Modify</th>
+                <th>Delete</th>
+            </tr>
+            <tr>
+                <td>SUPERIRON</td>
+                <td>RETAIL</td>
+                <td>1001</td>
+                <td>IPO20250001</td>
+                <td>12012345</td>
+                <td>ABCDE1234F</td>
+                <td>1200</td>
+                <td>129600</td>
+                <td>user@upi</td>
+                <td>11-03-2025 10:30 AM</td>
+                <td><button class="view-btn">View</button></td>
+                <td><button class="edit-btn">Edit</button></td>
+                <td><button class="delete-btn">Delete</button></td>
+            </tr>
+            <tr>
+                <td>DIVINEHIRA</td>
+                <td>NIB</td>
+                <td>1002</td>
+                <td>IPO20250002</td>
+                <td>12067890</td>
+                <td>XYZDE5678G</td>
+                <td>1600</td>
+                <td>144000</td>
+                <td>user2@upi</td>
+                <td>17-03-2025 11:00 AM</td>
+                <td><button class="view-btn">View</button></td>
+                <td><button class="edit-btn">Edit</button></td>
+                <td><button class="delete-btn">Delete</button></td>
+            </tr>
+        </table>
+    </section>
+
+    <section class="offline-bid">
+        <h2>Offline BID Data</h2>
+        <table>
+            <tr>
+                <th>ClientCode/Mobile</th>
+                <th>Category</th>
+                <th>Exchange</th>
+                <th>Rate</th>
+                <th>Quantity</th>
+                <th>Acc/UPI</th>
+                <th>Status</th>
+                <th>Date/Time</th>
+                <th>Delete</th>
+            </tr>
+            <tr>
+                <td>9319170619</td>
+                <td>RETAIL</td>
+                <td>BSE</td>
+                <td>108.00</td>
+                <td>1200</td>
+                <td>user@upi</td>
+                <td>Pending</td>
+                <td>11-03-2025 10:45 AM</td>
+                <td><button class="delete-btn">Delete</button></td>
+            </tr>
+            <tr>
+                <td>9876543210</td>
+                <td>NIB</td>
+                <td>NSE</td>
+                <td>90.00</td>
+                <td>1600</td>
+                <td>user2@upi</td>
+                <td>Confirmed</td>
+                <td>17-03-2025 11:30 AM</td>
+                <td><button class="delete-btn">Delete</button></td>
+            </tr>
+        </table>
+    </section>
+    <div class="center-align">
+        <div class="content-box">
+            <p style="margin-left: 120px;">
+                <b>RETAIL:</b> Retail Individual Investors (RIIs).<br>
+                <b>NIB:</b> Non-Institutional Bidders (NIBs) or Non-Institutional Investors (NIIs).<br>
+                <b>EMPRET:</b> Employee Reserved Quota (EMP).<br>
+                <a href="https://www.npci.org.in/what-we-do/ipo/live-partners" target="_blank">Click here</a> to check the list of apps and banks which support UPI IPO currently.
+            </p>
+            <p style="margin-left: 20px;">IPO bidding window is open from 10:00 AM till 05:00 PM | Only UPI Payments are supported for IPOs</p>
+        </div>
+    </div>
+
+    <!-- IPO Application Form Modal -->
+<!-- IPO Application Form Modal -->
+<div id="ipoFormModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeIpoFormModal()">&times;</span>
+        <div class="ipo-form-container">
+            <div class="ipo-form-section">
+                <h2>IPO Details</h2>
+                <p><strong>Issue Name:</strong> SUPERIRON (IND)</p>
+                <p><strong>Exchange:</strong> BSE</p>
+                <p><strong>Issue Open:</strong> 11-03-2025 10:00:00</p>
+                <p><strong>Issue End:</strong> 13-03-2025 17:00:00</p>
+                <p><strong>Issue Price:</strong> 108.00 - 108.00</p>
+                <p><strong>Cutoff Price:</strong> 108.00</p>
+                <p><strong>Market Lot:</strong> 1200</p>
+                <p><strong>Tick Size:</strong> 1.00</p>
+                <p><strong>Minimum Order Qty:</strong> 1200</p>
+                <p><strong>Discount:</strong> 0</p>
+            </div>
+            <div class="ipo-form-section">
+                <h2>Enter Your Bid</h2>
+                <form id="ipoForm" onsubmit="handleIpoFormSubmit(event)">
+                    <div class="input-group">
+                        <label for="upiId">Enter your UPI ID</label>
+                        <input type="text" id="upiId" required placeholder="Enter UPI ID (e.g., 9818445861)">
+                        <label style="margin-top: 10px;" for="upiId">Choose your UPI provider</label>
+                        <input type="text" id="upiId" required list="upiList" placeholder="Enter UPI ID Provider (e.g., @paytm)">
+                        <datalist id="upiList">
+                            <option value="@paytm">
+                            <option value="@upi">
+                            <option value="@rbl">
+                            <option value="@allbank">
+                            <option value="@aubank">
+                            <option value="@axisbank">
+                            <option value="@indus">
+                            <option value="@federal">
+                            <option value="@sbi">
+                            <option value="@yesbank">
+                            <option value="@citi">
+                            <option value="@citigold">
+                            <option value="@dbs">
+                            <option value="@freecharge">
+                            <option value="@okhdfcbank">
+                            <option value="@BARODAMPAY">
+                            <option value="@kotak">
+                            <option value="@icici">
+                            <option value="@idfc">
+                            <option value="@jupiter">
+                        </datalist>
+                    </div>
+                    <p class="important">IMPORTANT! Please remember to check your UPI app and accept the mandate request once you've submitted the IPO application.</p>
+                    <div class="input-group">
+                        <label for="lots">Number of Lots</label>
+                        <input type="number" id="lots" min="1" value="1" required oninput="calculateAmount()">
+                    </div>
+                    <div class="input-group">
+                        <label for="price">Cutoff Price</label>
+                        <input type="number" id="price" value="108" required disabled>
+                    </div>
+                    <div class="input-group">
+                        <label for="amount">Amount to be Blocked</label>
+                        <input type="text" id="amount" required disabled>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <p style="font-size: 12px; color: #666;">
+                            Note: Select 1 lot for a standard retail category IPO application
+                        </p>
+                        <div class="input-group" style="display: flex; align-items: flex-start; gap: 8px;">
+                            <input type="checkbox" id="terms" style="margin-top: 3px; width: 16px; height: 16px; cursor: pointer;">
+                            <label for="terms" style="font-size: 12px; line-height: 1.5; cursor: pointer;">
+                                I hereby undertake that I have read the Red Herring Prospectus and I am an eligible UPI bidder as per the applicable provisions of the SEBI (Issue of Capital and Disclosure Requirement) Regulation, 2009.
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <button style="background-color: #007bff;" type="submit" class="btn-submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bid Status Modal -->
+    <div id="bidStatusModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Bid Status - SUPERIRON</h2>
+            <div class="status-item">
+                <strong>Application Number:</strong> IPO20250001
+            </div>
+            <div class="status-item">
+                <strong>Bid ID:</strong> 1001
+            </div>
+            <div class="status-item">
+                <strong>Category:</strong> RETAIL
+            </div>
+            <div class="status-item">
+                <strong>Quantity:</strong> 1200
+            </div>
+            <div class="status-item">
+                <strong>Amount:</strong> ₹129,600
+            </div>
+            <div class="status-item">
+                <strong>UPI ID:</strong> user@upi
+            </div>
+            <div class="status-item">
+                <strong>Date/Time:</strong> 11-03-2025 10:30 AM
+            </div>
+            <div class="status-item">
+                <strong>Status:</strong> Bid Submitted Successfully
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Bid Modal -->
+    <div id="editBidModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Bid</h2>
+            <form class="edit-form">
+                <label for="edit-quantity">Quantity (Lots):</label>
+                <input type="number" id="edit-quantity" name="quantity" required oninput="calculateAmount()">
+                <label for="edit-cutoff-price">Cutoff Price:</label>
+                <input type="number" id="edit-cutoff-price" name="cutoff-price" required oninput="calculateAmount()">
+                <label for="edit-amount">Amount:</label>
+                <input type="text" id="edit-amount" name="amount" readonly>
+                <label for="edit-upi">UPI ID:</label>
+                <input type="text" id="edit-upi" name="upi" required>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Delete Bid</h2>
+            <div class="delete-confirmation">
+                <p>Are you sure you want to delete this bid?</p>
+                <button class="delete-confirm">Yes, Delete</button>
+                <button class="close">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to calculate amount based on quantity and cutoff price
+        function calculateAmount() {
+        // For IPO Application Form
+        const lots = document.getElementById('lots')?.value || 0;
+        const price = 108; // Fixed price
+        const lotSize = 1200; // Fixed lot size
+        const amount = lots * lotSize * price;
+        if (document.getElementById('amount')) {
+            document.getElementById('amount').value = amount ? `₹ ${amount}` : '';
+        }
+
+        // For Edit Bids Form
+        const editLots = document.getElementById('edit-quantity')?.value || 0;
+        const editPrice = document.getElementById('edit-cutoff-price')?.value || 0;
+        const editAmount = editLots * lotSize * editPrice;
+        if (document.getElementById('edit-amount')) {
+            document.getElementById('edit-amount').value = editAmount ? `₹ ${editAmount}` : '';
+            }
+        }
+
+        // Function to open the IPO application form modal
+        function openIpoFormModal() {
+            document.getElementById('ipoFormModal').style.display = 'flex';
+        }
+
+        // Function to close the IPO application form modal
+        function closeIpoFormModal() {
+            document.getElementById('ipoFormModal').style.display = 'none';
+        }
+
+        // Handle IPO form submission
+        function handleIpoFormSubmit(event) {
+            event.preventDefault();
+            if (document.getElementById('terms').checked) {
+                alert('Bid submitted successfully!');
+                closeIpoFormModal();
+                document.getElementById('ipoForm').reset();
+                calculateAmount();
+            } else {
+                alert('Please agree to the terms and conditions before submitting.');
+            }
+        }
+
+        // JavaScript for Modals
+        const viewModal = document.getElementById("bidStatusModal");
+        const editModal = document.getElementById("editBidModal");
+        const deleteModal = document.getElementById("deleteConfirmationModal");
+        const closeBtns = document.querySelectorAll(".close");
+
+        // Function to open the view modal
+        function openViewModal() {
+            viewModal.style.display = "flex";
+        }
+
+        // Function to open the edit modal
+        function openEditModal() {
+            editModal.style.display = "flex";
+        }
+
+        // Function to open the delete confirmation modal
+        function openDeleteModal() {
+            deleteModal.style.display = "flex";
+        }
+
+        // Function to close modals
+        function closeModal() {
+            viewModal.style.display = "none";
+            editModal.style.display = "none";
+            deleteModal.style.display = "none";
+        }
+
+        // Attach event listeners to "View" buttons
+        const viewButtons = document.querySelectorAll(".view-btn");
+        viewButtons.forEach(button => {
+            button.addEventListener("click", openViewModal);
+        });
+
+        // Attach event listeners to "Edit" buttons
+        const editButtons = document.querySelectorAll(".edit-btn");
+        editButtons.forEach(button => {
+            button.addEventListener("click", openEditModal);
+        });
+
+        // Attach event listeners to "Delete" buttons
+        const deleteButtons = document.querySelectorAll(".delete-btn");
+        deleteButtons.forEach(button => {
+            button.addEventListener("click", openDeleteModal);
+        });
+
+        // Close modals when the close button is clicked
+        closeBtns.forEach(btn => {
+            btn.addEventListener("click", closeModal);
+        });
+
+        // Close modals when clicking outside the modal content
+        window.addEventListener("click", (event) => {
+            if (event.target === viewModal || event.target === editModal || event.target === deleteModal) {
+                closeModal();
+            }
+        });
+
+        // Handle form submission for editing bid
+        const editForm = document.querySelector(".edit-form");
+        editForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const quantity = document.getElementById("edit-quantity").value;
+            const cutoffPrice = document.getElementById("edit-cutoff-price").value;
+            const amount = document.getElementById("edit-amount").value;
+            const upi = document.getElementById("edit-upi").value;
+            alert(`Bid updated!\nQuantity: ${quantity}\nCutoff Price: ${cutoffPrice}\nAmount: ${amount}\nUPI: ${upi}`);
+            closeModal();
+        });
+
+        // Handle delete confirmation
+        const deleteConfirmButton = document.querySelector(".delete-confirm");
+        deleteConfirmButton.addEventListener("click", () => {
+            alert("Bid deleted successfully!");
+            closeModal();
+        });
+    </script>
+
+    <script>
+        document.querySelector('.logout').addEventListener('click', function() {
+        if (confirm('Are you sure you want to logout?')) {
+            // Clear storage
+            localStorage.removeItem('userToken');
+            sessionStorage.removeItem('userSession');
+
+            // Redirect to the index page
+            window.location.href = "index.html";
+        }
+        });
+
+        document.querySelector('.header').addEventListener('click', function() { 
+            localStorage.removeItem('userToken');
+            sessionStorage.removeItem('userSession');
+
+            // Redirect to the index page
+            window.location.href = "ipo.html";
+        });
+    </script>
+</body>
+</html>
