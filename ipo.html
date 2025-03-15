@@ -183,54 +183,59 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
+
+        #ipoFormModal .modal-content {
+            max-width: 600px; /* Reduced from 800px */
+            width: 90%;
+            padding: 15px; /* Reduced padding */
+        }
+
+        .ipo-form-container {
+            gap: 10px; /* Reduced gap between sections */
+        }
+
+        .ipo-form-section {
+            padding: 8px; /* Reduced padding */
+        }
+
+        .ipo-form-section h2, .ipo-form-section h3 {
+            font-size: 18px; /* Reduced font size for headings */
+            padding-bottom: 8px; /* Reduced padding */
+        }
+
+        .input-group {
+            margin-bottom: 1px; /* Reduced margin */
+        }
+
+        .input-group label {
+            font-size: 12px; /* Reduced font size for labels */
+            margin-bottom: 4px; /* Reduced margin */
+        }
+
+        .input-group input, .input-group select, .input-group button {
+            padding: 5px; /* Reduced padding */
+            font-size: 12px; /* Reduced font size */
+        }
+
+        .btn-submit {
+            padding: 6px; /* Reduced padding */
+            font-size: 12px; /* Reduced font size */
+        }
+
+        .important {
+            font-size: 12px; /* Reduced font size */
+            margin-bottom: 3px; /* Reduced margin */
+        }
+        @media (max-width: 768px) {
+            .ipo-form-container {
+                flex-direction: column;
+            }
+            .modal-content {
+                width: 95%;
+            }
+        }
+
     </style>
-    <style>
-    /* Other styles remain the same */
-
-    /* IPO Application Form Modal Styles */
-    #ipoFormModal .modal-content {
-        max-width: 600px; /* Reduced from 800px */
-        width: 90%;
-        padding: 15px; /* Reduced padding */
-    }
-
-    .ipo-form-container {
-        gap: 10px; /* Reduced gap between sections */
-    }
-
-    .ipo-form-section {
-        padding: 8px; /* Reduced padding */
-    }
-
-    .ipo-form-section h2, .ipo-form-section h3 {
-        font-size: 18px; /* Reduced font size for headings */
-        padding-bottom: 8px; /* Reduced padding */
-    }
-
-    .input-group {
-        margin-bottom: 1px; /* Reduced margin */
-    }
-
-    .input-group label {
-        font-size: 12px; /* Reduced font size for labels */
-        margin-bottom: 4px; /* Reduced margin */
-    }
-
-    .input-group input, .input-group select, .input-group button {
-        padding: 5px; /* Reduced padding */
-        font-size: 12px; /* Reduced font size */
-    }
-
-    .btn-submit {
-        padding: 6px; /* Reduced padding */
-        font-size: 12px; /* Reduced font size */
-    }
-
-    .important {
-        font-size: 12px; /* Reduced font size */
-        margin-bottom: 3px; /* Reduced margin */
-    }
-</style>
 </head>
 <body>
     <div class="header">

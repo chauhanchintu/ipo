@@ -18,45 +18,47 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px; /* Added padding for smaller screens */
         }
 
         .login-container {
             background: #111;
-            padding: 40px; /* Increased padding */
+            padding: 30px;
             border-radius: 12px;
             text-align: center;
-            width: 400px; /* Increased width */
+            width: 100%;
+            max-width: 400px; /* Ensured responsiveness */
             border: 3px solid #00b2b2;
         }
 
         h2 {
             color: #00b2b2;
-            font-size: 28px; /* Increased font size */
+            font-size: 24px;
             margin-bottom: 20px;
         }
 
         input {
             width: 100%;
-            padding: 15px; /* Increased padding */
-            margin: 12px 0;
+            padding: 14px;
+            margin: 10px 0;
             border: 2px solid #00b2b2;
             background: #000;
             color: #fff;
-            border-radius: 8px; /* Rounded corners */
-            font-size: 18px; /* Increased font size */
+            border-radius: 8px;
+            font-size: 16px;
         }
 
         .btn {
             width: 100%;
-            padding: 15px; /* Increased padding */
+            padding: 14px;
             background: #00b2b2;
             border: none;
             color: #000;
             cursor: pointer;
-            font-size: 20px; /* Increased font size */
+            font-size: 18px;
             border-radius: 8px;
-            transition: 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
             font-weight: bold;
         }
 
@@ -67,10 +69,41 @@
 
         .error {
             color: red;
-            font-size: 18px; /* Increased font size */
-            margin-top: 12px;
+            font-size: 16px;
+            margin-top: 10px;
             display: none;
         }
+
+        /* ✅ Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .login-container {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            input, .btn {
+                padding: 12px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 15px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            input, .btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
     </style>
 </head>
 <body>
